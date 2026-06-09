@@ -1,10 +1,31 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../models/product";
 import Catalog from "../../features/catalog/Catalog";
-import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  createTheme,
+  CssBaseline,
+  ThemeProvider,
+} from "@mui/material";
+import NavBar from "./NavBar";
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [darkMode, setDarkMode] = useState(false); // State to manage dark mode
+  const paletteType = darkMode ? "dark" : "light";
+  const theme = createTheme({
+    palette: {
+      mode: paletteType,
+      background: {
+        default: paletteType === "light" ? "#eaeaea" : "#121212",
+      },
+    },
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   useEffect(() => {
     fetch("https://localhost:5001/api/products")
@@ -12,41 +33,24 @@ function App() {
       .then((data) => setProducts(data));
   }, []);
 
-  const addProduct = () => {
-    setProducts((prevState) => [
-      ...prevState,
-      {
-        id: prevState.length + 1,
-        name: "Product " + (prevState.length + 1),
-        price: prevState.length * 100 + 100,
-        description: "Description for product ",
-        pictureUrl: "https://via.placeholder.com/150",
-        quantityInStock: 10,
-        type: "Type ",
-        brand: "Brand ",
-      },
-    ]);
-  };
-
   return (
-    <Container maxWidth="xl">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <NavBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 3,
-          my: 4,
-          flexWrap: "wrap",
+          minHeight: "100vh",
+          background: darkMode
+            ? "radial-gradient(circle, #2d0606, #111B27)"
+            : "radial-gradient(circle, #baecf9, #F0F9FF)",
+          py: 6,
         }}
       >
-        <Typography variant="h4">Espiga & Sol</Typography>
-        <Button variant="outlined" onClick={addProduct}>
-          Add Product
-        </Button>
+        <Container maxWidth="xl" sx={{ mt: 8 }}>
+          <Catalog products={products} />
+        </Container>
       </Box>
-      <Catalog products={products} />
-    </Container>
+    </ThemeProvider>
   );
 }
 

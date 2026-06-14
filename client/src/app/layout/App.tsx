@@ -42,7 +42,7 @@ function App() {
           minHeight: "100vh",
           background: darkMode
             ? "radial-gradient(circle, #2d0606, #111B27)"
-            : "radial-gradient(circle, #baecf9, #F0F9FF)",
+            : "radial-gradient(circle, #c9d3d5, #F0F9FF)",
           py: 6,
         }}
       >

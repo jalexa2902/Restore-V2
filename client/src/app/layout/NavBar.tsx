@@ -9,7 +9,7 @@ type Props = {
 
 export default function NavBar({ darkMode, toggleDarkMode }: Props) {
   return (
-    <AppBar position="fixed" sx={{backgroundColor: '#64050569'}}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#64050569" }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Espiga&Sol

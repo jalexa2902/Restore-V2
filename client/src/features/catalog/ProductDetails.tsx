@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { Product } from "../../app/models/product";
 import Grid from "@mui/material/Grid";
 import { Button, Divider, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
+import { useFetchProductDetailsQuery } from "./catalogApi";
 
 export default function ProductDetails() {
 
-  const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
+  const { id } = useParams();
 
-  useEffect(() => {
-    fetch(`https://localhost:5001/api/products/${id}`)
-      .then((response) => response.json())
-      .then((data) => setProduct(data))
-      .catch((error) => console.error("Error fetching product details:", error));
-  }, [id]);
+  const { data: product, isLoading } = useFetchProductDetailsQuery(id ? +id : 0) 
 
-  if (!product) return <h3>Loading...</h3>
+
+  if (!product || isLoading) return <h3>Loading...</h3>
 
   const productDetails = [
     { label: 'Name', value: product.name },

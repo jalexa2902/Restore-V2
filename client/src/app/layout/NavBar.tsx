@@ -35,7 +35,7 @@ export default function NavBar() {
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography component={NavLink} to='/' variant="h6" sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}>
-            P R A T U M
+            P R A V I A
           </Typography>
           <IconButton onClick={() => dispatch(setDarkMode())}>
             {darkMode ? <DarkMode /> : <LightMode sx={{ color: "yellow" }} />}

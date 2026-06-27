@@ -6,14 +6,20 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import type { Product } from "../../app/models/product";
+
 import { Link } from "react-router-dom";
+import { useAddBasketItemMutation } from "../basket/basketApi";
+import type { Product } from "../../app/models/product";
+import { currencyFormat } from "../../lib/util";
 
 type Props = {
   product: Product;
 };
 
 export default function ProductCard({ product }: Props) {
+
+  const [addBasketItem, { isLoading }] = useAddBasketItemMutation();
+
   return (
     <Card
       elevation={3}
@@ -23,6 +29,7 @@ export default function ProductCard({ product }: Props) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        whiteSpace: 'nowrap',
       }}
     >
       <CardMedia
@@ -33,20 +40,28 @@ export default function ProductCard({ product }: Props) {
       <CardContent>
         <Typography
           gutterBottom
-          sx={{ textTransform: "uppercase" }}
+          sx={{ textTransform: "uppercase", whiteSpace: 'nowrap', }}
           variant="subtitle2"
         >
           {product.name}
         </Typography>
 
         <Typography variant="h6" sx={{ color: "secondary.main" }}>
-          ${(product.price / 100).toFixed(2)}
+          {currencyFormat(product.price)}
         </Typography>
       </CardContent>
 
-      <CardActions sx={{ justifyContent: "space-betweeen" }}>
-        <Button>Add to Cart</Button>
-        <Button component={Link} to={`/catalog/${product.id}`}>View Details</Button>
+      <CardActions sx={{ justifyContent: "center", flexDirection: "column", gap: 1 }}>
+        <Button
+          fullWidth
+          disabled={isLoading}
+          onClick={() => {
+            addBasketItem({ product, quantity: 1 });
+          }}
+        >
+          Agregar al carrito
+        </Button>
+        <Button fullWidth component={Link} to={`/catalog/${product.id}`}>Ver detalles</Button>
       </CardActions>
     </Card>
   );

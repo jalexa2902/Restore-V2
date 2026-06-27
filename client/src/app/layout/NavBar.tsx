@@ -2,33 +2,39 @@ import DarkMode from "@mui/icons-material/DarkMode";
 import LightMode from "@mui/icons-material/LightMode";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { AppBar, Badge, Box, IconButton, LinearProgress, List, ListItem, Toolbar, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setDarkMode } from "./uiSlice";
+import { useFetchBasketQuery } from "../../features/basket/basketApi";
 
 const midLinks = [
-  { title: "catalog", path: "/catalog" },
-  { title: "about", path: "/about" },
-  { title: "contact", path: "/contact" },
+  { title: "catálogo", path: "/catalog" },
+  { title: "acerca", path: "/about" },
+  { title: "contacto", path: "/contact" },
 ]
 
 const rightLinks = [
-  { title: "login", path: "/login" },
-  { title: "register", path: "/register" }
+  { title: "Inicia sesión", path: "/login" },
+  { title: "registrate", path: "/register" }
 ]
 
 const navStyles = {
   color: "inherit",
-  typography: "h6",
+  typography: "0.9rem",
   "&:hover": { color: "yellow" },
   "&.active": { color: "text.secondary" },
   textDecoration: "none",
+  whiteSpace: 'nowrap',
+  display: 'inline-flex'
 }
 
 
 export default function NavBar() {
   const { isLoading, darkMode } = useAppSelector(state => state.ui);
   const dispatch = useAppDispatch();
+  const { data: basket } = useFetchBasketQuery();
+
+  const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0) || 0; //actualizar numero de items en carrito
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#05462569" }}>
@@ -58,12 +64,12 @@ export default function NavBar() {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton size='large'>
-            <Badge badgeContent={4} color="secondary">
+          <IconButton component={Link} to='/basket' size='large'>
+            <Badge badgeContent={itemCount} color="secondary">
               <ShoppingCart />
             </Badge>
           </IconButton>
-          <List sx={{ display: "flex" }}>
+          <List sx={{ display: "flex", p: 0 }}>
             {rightLinks.map(({ title, path }) => (
 
               <ListItem
